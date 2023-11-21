@@ -1,4 +1,5 @@
-﻿using BookVilla.Infrastructure.Data;
+﻿using BookVilla.Domain.Entities;
+using BookVilla.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookVilla.Web.Controllers
@@ -20,6 +21,18 @@ namespace BookVilla.Web.Controllers
 
         public IActionResult Create()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Villa obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Villas.Add(obj);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return View();
         }
     }
