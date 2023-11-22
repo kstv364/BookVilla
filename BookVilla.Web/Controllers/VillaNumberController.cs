@@ -1,6 +1,7 @@
 ﻿using BookVilla.Domain.Entities;
 using BookVilla.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookVilla.Web.Controllers
 {
@@ -21,6 +22,12 @@ namespace BookVilla.Web.Controllers
 
         public IActionResult Create()
         {
+            IEnumerable<SelectListItem> list = _db.Villas.ToList().Select(u => new SelectListItem
+            {
+                Text = u.Name,
+                Value = u.Id.ToString()
+            });
+            ViewBag.VillaList = list;
             return View();
         }
 
