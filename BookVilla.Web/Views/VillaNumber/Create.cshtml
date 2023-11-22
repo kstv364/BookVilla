@@ -14,7 +14,7 @@
                 @* <div asp-validation-summary="All"></div> *@
                 <div class="form-floating py-1 col-12">
 
-                    <select asp-for="@Model.VillaNumber.VillaId" asp-items="@ViewBag.VillaList as IEnumerable<SelectListItem>"
+                    <select asp-for="@Model.VillaNumber.VillaId" asp-items="@Model.VillaList as IEnumerable<SelectListItem>"
                             class="form-select border shadow">
                         <option disabled selected>--Select Villa--</option>
                     </select>
