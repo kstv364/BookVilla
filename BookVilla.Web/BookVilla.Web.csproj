@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BookVilla.Application\BookVilla.Application.csproj" />
     <ProjectReference Include="..\BookVilla.Infrastructure\BookVilla.Infrastructure.csproj" />
   </ItemGroup>
 
