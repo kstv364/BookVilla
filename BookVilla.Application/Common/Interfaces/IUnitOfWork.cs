@@ -12,6 +12,8 @@ namespace BookVilla.Application.Common.Interfaces
 
         IVillaNumberRepository VillaNumber { get; }
 
+        IAmenityRepository Amenity { get; }
+
         void Save();
     }
 
