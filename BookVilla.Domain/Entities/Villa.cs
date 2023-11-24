@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookVilla.Domain.Entities
 {
@@ -16,6 +18,10 @@ namespace BookVilla.Domain.Entities
         public int Occupancy { get; set; }
         [Display(Name = "Image Url")]
         public string? ImageUrl { get; set; }
+
+        [NotMapped]
+        public IFormFile? Image { get; set; }
+
         public DateTime? Created_Date { get; set; }
         public DateTime? Updated_Date { get; set; }
     }
