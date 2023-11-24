@@ -1,4 +1,5 @@
-﻿using BookVilla.Domain.Entities;
+﻿using BookVilla.Application.Common.Interfaces;
+using BookVilla.Domain.Entities;
 using BookVilla.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,16 +7,16 @@ namespace BookVilla.Web.Controllers
 {
     public class VillaController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IVillaRepository _villas;
 
-        public VillaController(ApplicationDbContext context)
+        public VillaController(IVillaRepository villas)
         {
-            _context = context;
+            _villas = villas;
         }
 
         public IActionResult Index()
         {
-            var villas = _context.Villas.ToList();
+            var villas = _villas.GetAll();
             return View(villas);
         }
 
@@ -34,8 +35,8 @@ namespace BookVilla.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Villas.Add(obj);
-                _context.SaveChanges();
+                _villas.Add(obj);
+                _villas.Save();
                 TempData["success"] = "The villa has been created successfully.";
                 return RedirectToAction("Index");
             }
@@ -44,7 +45,7 @@ namespace BookVilla.Web.Controllers
 
         public IActionResult Update(int villaId)
         {
-            Villa? obj = _context.Villas.FirstOrDefault(u => u.Id == villaId);
+            Villa? obj = _villas.Get(u => u.Id == villaId);
             if (obj == null)
             {
                 return RedirectToAction("Error", "Home");
@@ -57,8 +58,8 @@ namespace BookVilla.Web.Controllers
         {
             if (ModelState.IsValid && obj.Id > 0)
             {
-                _context.Villas.Update(obj);
-                _context.SaveChanges();
+                _villas.Update(obj);
+                _villas.Save();
                 TempData["success"] = "The villa has been updated successfully.";
                 return RedirectToAction("Index");
             }
@@ -67,7 +68,7 @@ namespace BookVilla.Web.Controllers
 
         public IActionResult Delete(int villaId)
         {
-            Villa? obj = _context.Villas.FirstOrDefault(u => u.Id == villaId);
+            Villa? obj = _villas.Get(u => u.Id == villaId);
             if (obj is null)
             {
                 return RedirectToAction("Error", "Home");
@@ -78,11 +79,11 @@ namespace BookVilla.Web.Controllers
         [HttpPost]
         public IActionResult Delete(Villa obj)
         {
-            Villa? objFromDb = _context.Villas.FirstOrDefault(u => u.Id == obj.Id);
+            Villa? objFromDb = _villas.Get(u => u.Id == obj.Id);
             if (objFromDb is not null)
             {
-                _context.Villas.Remove(objFromDb);
-                _context.SaveChanges();
+                _villas.Remove(objFromDb);
+                _villas.Save();
                 TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction("Index");
             }

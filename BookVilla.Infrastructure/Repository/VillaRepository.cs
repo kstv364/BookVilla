@@ -1,39 +1,75 @@
 ﻿using BookVilla.Application.Common.Interfaces;
 using BookVilla.Domain.Entities;
+using BookVilla.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace BookVilla.Infrastructure.Repository
 {
     public class VillaRepository : IVillaRepository
     {
+        private readonly ApplicationDbContext _db;
+
+        public VillaRepository(ApplicationDbContext db)
+        {
+            _db = db;
+        }
         public void Add(Villa entity)
         {
-            throw new NotImplementedException();
+            _db.Add(entity);
         }
 
-        public IEnumerable<Villa> Get(Expression<Func<Villa, bool>> filter, string? includeProperties = null)
+        public Villa Get(Expression<Func<Villa, bool>> filter, string? includeProperties = null)
         {
-            throw new NotImplementedException();
+            IQueryable<Villa> query = _db.Set<Villa>();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                //Villa,VillaNumber -- case sensitive
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+            return query.FirstOrDefault();
         }
 
         public IEnumerable<Villa> GetAll(Expression<Func<Villa, bool>>? filter = null, string? includeProperties = null)
         {
-            throw new NotImplementedException();
+            IQueryable<Villa> query = _db.Set<Villa>();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                //Villa,VillaNumber -- case sensitive
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+            return query.ToList();
         }
 
         public void Remove(Villa entity)
         {
-            throw new NotImplementedException();
+            _db.Remove(entity);
         }
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _db.SaveChanges();
         }
 
         public void Update(Villa entity)
         {
-            throw new NotImplementedException();
+            _db.Villas.Update(entity);
         }
     }
 }
