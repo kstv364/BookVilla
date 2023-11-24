@@ -65,5 +65,10 @@ namespace BookVilla.Infrastructure.Repository
         {
             dbSet.Remove(entity);
         }
+
+        public bool Any(Expression<Func<T, bool>> filter)
+        {
+            return dbSet.Any(filter);
+        }
     }
 }

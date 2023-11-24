@@ -7,16 +7,16 @@ namespace BookVilla.Web.Controllers
 {
     public class VillaController : Controller
     {
-        private readonly IVillaRepository _villas;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public VillaController(IVillaRepository villas)
+        public VillaController(IUnitOfWork unitOfWork)
         {
-            _villas = villas;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            var villas = _villas.GetAll();
+            var villas = _unitOfWork.Villa.GetAll();
             return View(villas);
         }
 
@@ -35,8 +35,8 @@ namespace BookVilla.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                _villas.Add(obj);
-                _villas.Save();
+                _unitOfWork.Villa.Add(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "The villa has been created successfully.";
                 return RedirectToAction("Index");
             }
@@ -45,7 +45,7 @@ namespace BookVilla.Web.Controllers
 
         public IActionResult Update(int villaId)
         {
-            Villa? obj = _villas.Get(u => u.Id == villaId);
+            Villa? obj = _unitOfWork.Villa.Get(u => u.Id == villaId);
             if (obj == null)
             {
                 return RedirectToAction("Error", "Home");
@@ -58,8 +58,8 @@ namespace BookVilla.Web.Controllers
         {
             if (ModelState.IsValid && obj.Id > 0)
             {
-                _villas.Update(obj);
-                _villas.Save();
+                _unitOfWork.Villa.Update(obj);
+                _unitOfWork.Save();
                 TempData["success"] = "The villa has been updated successfully.";
                 return RedirectToAction("Index");
             }
@@ -68,7 +68,7 @@ namespace BookVilla.Web.Controllers
 
         public IActionResult Delete(int villaId)
         {
-            Villa? obj = _villas.Get(u => u.Id == villaId);
+            Villa? obj = _unitOfWork.Villa.Get(u => u.Id == villaId);
             if (obj is null)
             {
                 return RedirectToAction("Error", "Home");
@@ -79,11 +79,11 @@ namespace BookVilla.Web.Controllers
         [HttpPost]
         public IActionResult Delete(Villa obj)
         {
-            Villa? objFromDb = _villas.Get(u => u.Id == obj.Id);
+            Villa? objFromDb = _unitOfWork.Villa.Get(u => u.Id == obj.Id);
             if (objFromDb is not null)
             {
-                _villas.Remove(objFromDb);
-                _villas.Save();
+                _unitOfWork.Villa.Remove(objFromDb);
+                _unitOfWork.Save();
                 TempData["success"] = "The villa has been deleted successfully.";
                 return RedirectToAction("Index");
             }
